@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artistic Image Feedback</title>
+</head>
+<body>
+    <h1>How do you feel about the following images?</h1>
+    <form method="POST">
+        <div>
+            <img src="{{ url_for('static', filename='images/image1.jpg') }}" alt="Nature Image 1" width="300">
+            <label for="image1">Rate your feelings (1 = Very Bad, 5 = Very Good):</label>
+            <input type="number" id="image1" name="image1" min="1" max="5" required>
+        </div>
+
+        <div>
+            <img src="{{ url_for('static', filename='images/image2.jpg') }}" alt="Nature Image 2" width="300">
+            <label for="image2">Rate your feelings (1 = Very Bad, 5 = Very Good):</label>
+            <input type="number" id="image2" name="image2" min="1" max="5" required>
+        </div>
+
+        <div>
+            <img src="{{ url_for('static', filename='images/image3.jpg') }}" alt="Nature Image 3" width="300">
+            <label for="image3">Rate your feelings (1 = Very Bad, 5 = Very Good):</label>
+            <input type="number" id="image3" name="image3" min="1" max="5" required>
+        </div>
+
+        <div>
+            <img src="{{ url_for('static', filename='images/image4.jpg') }}" alt="Nature Image 4" width="300">
+            <label for="image4">Rate your feelings (1 = Very Bad, 5 = Very Good):</label>
+            <input type="number" id="image4" name="image4" min="1" max="5" required>
+        </div>
+
+        <div>
+            <img src="{{ url_for('static', filename='images/image5.jpg') }}" alt="Nature Image 5" width="300">
+            <label for="image5">Rate your feelings (1 = Very Bad, 5 = Very Good):</label>
+            <input type="number" id="image5" name="image5" min="1" max="5" required>
+        </div>
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
