@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result</title>
+</head>
+<body>
+    <h1>Your Mood Prediction</h1>
+    <p>Based on your selections, your mood is: <strong>{{ predicted_mood }}</strong></p>
+    <a href="{{ url_for('emoji_game') }}">Play Again</a>
+</body>
+</html>

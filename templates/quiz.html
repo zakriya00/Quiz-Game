@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Depression Detection</title>
-    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles2.css') }}">
 </head>
 <body>
     <div class="container">
         <h1>Depression Detection</h1>
         <form id="mcq-form" method="POST">
+
             <p>1. How often do you feel down, depressed, or hopeless?</p>
             <select name="q1">
                 <option value="0">Not at all</option>
@@ -85,8 +86,8 @@
             <button type="submit">Submit</button>
         </form>
         
-        <p id="result"></p>
+        <h1 id="result"></h1>
     </div>
-    <script src="static/script.js"></script>
+    <script src="{{ url_for('static', filename='script2.js') }}"></script>
 </body>
 </html>

@@ -6,7 +6,7 @@ document.getElementById("mcq-form").addEventListener("submit", function(event) {
         answers.push(parseInt(select.value));
     });
 
-    fetch("/predict", {
+    fetch("/quiz_predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ answers: answers })
