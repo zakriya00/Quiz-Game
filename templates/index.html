@@ -1,208 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emotional Color Matching</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Index - OnePage Bootstrap Template</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
+  <!-- Favicons -->
+  <link href="static/img/favicon.png" rel="icon">
+  <link href="static/img/apple-touch-icon.png" rel="apple-touch-icon">
 
-        .container {
-            width: 50%;
-            margin: 50px auto;
-            text-align: center;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
+  <!-- Vendor CSS Files -->
+  <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="static/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="static/vendor/aos/aos.css" rel="stylesheet">
+  <link href="static/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="static/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
-        p {
-            font-size: 1.2rem;
-        }
+  <!-- Main CSS File -->
+  <link href="static/css/main.css" rel="stylesheet">
 
-        .color-btn {
-            width: 50px;
-            height: 50px;
-            border: none;
-            border-radius: 50%;
-            margin: 10px;
-            cursor: pointer;
-            display: inline-block;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 1rem;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .result {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #e9e9e9;
-            border-radius: 5px;
-        }
-
-        #progressSection {
-            margin-top: 20px;
-        }
-    </style>
+  <!-- =======================================================
+  * Template Name: OnePage
+  * Template URL: https://bootstrapmade.com/onepage-multipurpose-bootstrap-template/
+  * Updated: Aug 07 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
 </head>
-<body>
 
-    <div>
-        <a href="{{ url_for('art_image_feedback') }}">Go to Art Game</a>
-    </div>
+<body class="index-page">
 
-    <div>
-        <a href="{{ url_for('quiz') }}">Go to Quiz Game</a>
-    </div>
+  <header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
 
-    <div>
-        <a href="{{ url_for('emoji_game') }}">Go to Emoji Game</a>
+      <a href="index.html" class="logo d-flex align-items-center me-auto">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <!-- <img src="static/img/logo.png" alt=""> -->
+        <h1 class="sitename">ELEVYN</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="/" class="active">Home<br></a></li>
+          <li><a href="/color">Color Matching Game</a></li>
+          <li><a href="/quiz">Quiz Game</a></li>
+          <li><a href="/art_image_feedback">Art Therapy Game</a></li>
+          <li><a href="/emoji_game">Emoji Game</a></li>
+          <!-- <li><a href="#portfolio">Portfolio</a></li> -->
+          <!-- <li><a href="#portfolio">Portfolio</a></li> -->
+          <!-- <li><a href="#portfolio">Portfolio</a></li> -->
+          <!-- <li><a href="#team">Team</a></li> -->
+          <!-- <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+            <ul>
+              <li><a href="#">Dropdown 1</a></li>
+              <li class="dropdown"><a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                <ul>
+                  <li><a href="#">Deep Dropdown 1</a></li>
+                  <li><a href="#">Deep Dropdown 2</a></li>
+                  <li><a href="#">Deep Dropdown 3</a></li>
+                  <li><a href="#">Deep Dropdown 4</a></li>
+                  <li><a href="#">Deep Dropdown 5</a></li>
+                </ul>
+              </li> -->
+              <!-- <li><a href="#">Dropdown 2</a></li>
+              <li><a href="#">Dropdown 3</a></li>
+              <li><a href="#">Dropdown 4</a></li>
+            </ul>
+          </li>
+          <li><a href="#contact">Contact</a></li>
+        </ul> -->
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+      <a class="btn-getstarted" href="/color">Get Started</a>
+
     </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero section">
+
+      <img src="static/img/hero-bg-abstract.jpg" alt="" data-aos="fade-in" class="">
+
+      <div class="container">
+        <div class="row justify-content-center" data-aos="zoom-out">
+          <div class="col-xl-7 col-lg-9 text-center">
+            <h1>Gamified Therapy For Mental Health</h1>
+            <p>TEAM EliteX</p>
+          </div>
+        </div>
+        <div class="text-center" data-aos="zoom-out" data-aos-delay="100">
+          <a href="/color" class="btn-get-started">Get Started</a>
+        </div>
+
+        <div class="row gy-4 mt-5">
+          <div class="col-md-6 col-lg-3" data-aos="zoom-out" data-aos-delay="100">
+            <div class="icon-box">
+              <div class="icon"><i class="bi bi-palette-fill"></i></div>
+              <h4 class="title"><a href="/color">Color Matching Game</a></h4>
+              <p class="description">An <b>Emotional Color Matching Game</b> uses color choices to predict mood and detect signs of depression in a fun and engaging way.</p>
+            </div>
+          </div><!--End Icon Box -->
+
+          <div class="col-md-6 col-lg-3" data-aos="zoom-out" data-aos-delay="200">
+            <div class="icon-box">
+              <div class="icon"><i class="bi bi-patch-question"></i></div>
+              <h4 class="title"><a href="/quiz"> Quiz Game</a></h4>
+              <p class="description">A <b>Quiz Game for Depression Detection</b> uses story-based questions to analyze responses and provide insights into mental health.</p>
+            </div>
+          </div><!--End Icon Box -->
+
+          <div class="col-md-6 col-lg-3" data-aos="zoom-out" data-aos-delay="300">
+            <div class="icon-box">
+              <div class="icon"><i class="bi bi-brush-fill"></i></div>
+              <h4 class="title"><a href="/art_image_feedback">Art Therapy Game</a></h4>
+              <p class="description">An <b>Art Therapy Game</b> presents artworks for users to rate, analyzing their responses to predict mood and detect signs of depression.</p>
+            </div>
+          </div><!--End Icon Box -->
+
+          <div class="col-md-6 col-lg-3" data-aos="zoom-out" data-aos-delay="400">
+            <div class="icon-box">
+              <div class="icon"><i class="bi bi-command"></i></div>
+              <h4 class="title"><a href="/emoji_game">Emoji Game</a></h4>
+              <p class="description">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
+            </div>
+          </div><!--End Icon Box -->
+
+        </div>
+      </div>
+
+    </section><!-- /Hero Section -->
+
+    <!-- About Section -->
+    <!-- /About Section -->
+
     
-    <div class="container">
-        <h1>Emotional Color Matching</h1>
-        
-        <!-- Display the current sentence -->
-        <p id="sentence">"The sun is shining, and everything feels peaceful and joyful."</p>
-        
-        <p id="sentenceNumber">Sentence 1/5</p>
-        
-        <!-- Provide color options for the user -->
-        <p>Select the color that best represents how you feel about the above sentence:</p>
-        <div id="colorOptions">
-            <button class="color-btn" style="background-color: #FFD700;" onclick="selectColor('#FFD700')"></button>
-            <button class="color-btn" style="background-color: #FF0000;" onclick="selectColor('#FF0000')"></button>
-            <button class="color-btn" style="background-color: #0000FF;" onclick="selectColor('#0000FF')"></button>
-            <button class="color-btn" style="background-color: #800080;" onclick="selectColor('#800080')"></button>
-            <button class="color-btn" style="background-color: #C0C0C0;" onclick="selectColor('#C0C0C0')"></button>
-        </div>
 
-        <!-- Button to submit the selection -->
-        <button id="submitBtn" onclick="submitSelection()">Submit Selection</button>
+    <!-- About Alt Section -->
 
-        <!-- Progress section -->
-        <div id="progressSection" style="display:none;">
-            <p>Sentences completed: <span id="completedCount">0</span>/5</p>
-            <button id="nextBtn" onclick="loadNextSentence()" style="display:none;">Next Sentence</button>
-        </div>
+    <!-- /About Alt Section -->
 
-        <!-- Display the final result -->
-        <div id="result" class="result" style="display:none;">
-            <h3>Predicted Mood:</h3>
-            <p id="moodResult"></p>
-        </div>
+   
+
+  </main>
+
+  <footer id="footer" class="footer light-background">
+
+
+
+    <div class="container copyright text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">OnePage</strong> <span>All Rights Reserved</span></p>
+      <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you've purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+      </div>
     </div>
 
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </footer>
 
-    <script>
-        let selectedColor = null;
-        let sentenceIndex = 0;  // To keep track of the sentence number
-        let colorChoices = [];  // To store selected colors for each sentence
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-        const sentences = [
-            "The sun is shining, and everything feels peaceful and joyful.",
-            "I feel so angry and frustrated right now.",
-            "Everything seems so calm, and I am relaxed.",
-            "I am feeling a bit down and sad today.",
-            "This moment feels chaotic, and I'm overwhelmed."
-        ];
+  <!-- Preloader -->
+  <div id="preloader"></div>
 
-        function selectColor(color) {
-            // Highlight the selected color and store it
-            selectedColor = color;
-            
-            // Change the border of all buttons to indicate selection
-            const colorButtons = document.querySelectorAll('.color-btn');
-            colorButtons.forEach(button => {
-                if (button.style.backgroundColor === color) {
-                    button.style.border = '3px solid #000';
-                } else {
-                    button.style.border = '';
-                }
-            });
-        }
+  <!-- Vendor JS Files -->
+  <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="static/vendor/php-email-form/validate.js"></script>
+  <script src="static/vendor/aos/aos.js"></script>
+  <script src="static/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="static/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="static/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="static/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="static/vendor/isotope-layout/isotope.pkgd.min.js"></script>
 
-        function submitSelection() {
-            if (selectedColor === null) {
-                alert("Please select a color!");
-                return;
-            }
+  <!-- Main JS File -->
+  <script src="static/js/main.js"></script>
 
-            // Store the selected color for the current sentence
-            colorChoices.push(selectedColor);
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-palette-fill" viewBox="0 0 16 16">
+    <path d="M12.433 10.07C14.133 10.585 16 11.15 16 8a8 8 0 1 0-8 8c1.996 0 1.826-1.504 1.649-3.08-.124-1.101-.252-2.237.351-2.92.465-.527 1.42-.237 2.433.07M8 5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m4.5 3a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3M5 6.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m.5 6.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3"/>
+  </svg>
 
-            // Disable the submit button after selection
-            document.getElementById("submitBtn").disabled = true;
-
-            // Show the progress and enable the next button
-            document.getElementById("progressSection").style.display = "block";
-            document.getElementById("completedCount").innerText = colorChoices.length;
-            document.getElementById("nextBtn").style.display = "inline-block";
-        }
-
-        function loadNextSentence() {
-            // Increment sentence index and load the next sentence
-            sentenceIndex++;
-            if (sentenceIndex < sentences.length) {
-                document.getElementById("sentence").innerText = sentences[sentenceIndex];
-                document.getElementById("sentenceNumber").innerText = `Sentence ${sentenceIndex + 1}/5`;
-                document.getElementById("submitBtn").disabled = false;
-                document.getElementById("nextBtn").style.display = "none";  // Hide next button until color is selected
-                document.getElementById("result").style.display = "none";  // Hide result
-            } else {
-                // All sentences completed, send data to backend
-                submitAllSelections();
-            }
-        }
-
-        function submitAllSelections() {
-            // Send all color choices to the Flask backend for mood prediction
-            const colorData = { colors: colorChoices };
-
-            fetch('/predict-mood', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(colorData),
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Display the final predicted mood
-                const resultDiv = document.getElementById('result');
-                const moodResult = document.getElementById('moodResult');
-                
-                moodResult.textContent = `The final mood after all selections is: ${data.predicted_mood}`;
-                resultDiv.style.display = 'block';
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-    </script>
 </body>
+
 </html>

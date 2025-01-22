@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotional Color Matching</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 50%;
+            margin: 50px auto;
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.2rem;
+        }
+
+        .color-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            margin: 10px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e9e9e9;
+            border-radius: 5px;
+        }
+
+        #progressSection {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <h1>Emotional Color Matching</h1>
+        
+        <!-- Display the current sentence -->
+        <p id="sentence">"The sun is shining, and everything feels peaceful and joyful."</p>
+        
+        <p id="sentenceNumber">Sentence 1/5</p>
+        
+        <!-- Provide color options for the user -->
+        <p>Select the color that best represents how you feel about the above sentence:</p>
+        <div id="colorOptions">
+            <button class="color-btn" style="background-color: #FFD700;" onclick="selectColor('#FFD700')"></button>
+            <button class="color-btn" style="background-color: #FF0000;" onclick="selectColor('#FF0000')"></button>
+            <button class="color-btn" style="background-color: #0000FF;" onclick="selectColor('#0000FF')"></button>
+            <button class="color-btn" style="background-color: #800080;" onclick="selectColor('#800080')"></button>
+            <button class="color-btn" style="background-color: #C0C0C0;" onclick="selectColor('#C0C0C0')"></button>
+        </div>
+
+        <!-- Button to submit the selection -->
+        <button id="submitBtn" onclick="submitSelection()">Submit Selection</button>
+
+        <!-- Progress section -->
+        <div id="progressSection" style="display:none;">
+            <p>Sentences completed: <span id="completedCount">0</span>/5</p>
+            <button id="nextBtn" onclick="loadNextSentence()" style="display:none;">Next Sentence</button>
+        </div>
+
+        <!-- Display the final result -->
+        <div id="result" class="result" style="display:none;">
+            <h3>Predicted Mood:</h3>
+            <p id="moodResult"></p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <script>
+        let selectedColor = null;
+        let sentenceIndex = 0;  // To keep track of the sentence number
+        let colorChoices = [];  // To store selected colors for each sentence
+
+        const sentences = [
+            "The sun is shining, and everything feels peaceful and joyful.",
+            "I feel so angry and frustrated right now.",
+            "Everything seems so calm, and I am relaxed.",
+            "I am feeling a bit down and sad today.",
+            "This moment feels chaotic, and I'm overwhelmed."
+        ];
+
+        function selectColor(color) {
+            // Highlight the selected color and store it
+            selectedColor = color;
+            
+            // Change the border of all buttons to indicate selection
+            const colorButtons = document.querySelectorAll('.color-btn');
+            colorButtons.forEach(button => {
+                if (button.style.backgroundColor === color) {
+                    button.style.border = '3px solid #000';
+                } else {
+                    button.style.border = '';
+                }
+            });
+        }
+
+        function submitSelection() {
+            if (selectedColor === null) {
+                alert("Please select a color!");
+                return;
+            }
+
+            // Store the selected color for the current sentence
+            colorChoices.push(selectedColor);
+
+            // Disable the submit button after selection
+            document.getElementById("submitBtn").disabled = true;
+
+            // Show the progress and enable the next button
+            document.getElementById("progressSection").style.display = "block";
+            document.getElementById("completedCount").innerText = colorChoices.length;
+            document.getElementById("nextBtn").style.display = "inline-block";
+        }
+
+        function loadNextSentence() {
+            // Increment sentence index and load the next sentence
+            sentenceIndex++;
+            if (sentenceIndex < sentences.length) {
+                document.getElementById("sentence").innerText = sentences[sentenceIndex];
+                document.getElementById("sentenceNumber").innerText = `Sentence ${sentenceIndex + 1}/5`;
+                document.getElementById("submitBtn").disabled = false;
+                document.getElementById("nextBtn").style.display = "none";  // Hide next button until color is selected
+                document.getElementById("result").style.display = "none";  // Hide result
+            } else {
+                // All sentences completed, send data to backend
+                submitAllSelections();
+            }
+        }
+
+        function submitAllSelections() {
+            // Send all color choices to the Flask backend for mood prediction
+            const colorData = { colors: colorChoices };
+
+            fetch('/predict-mood', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(colorData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the final predicted mood
+                const resultDiv = document.getElementById('result');
+                const moodResult = document.getElementById('moodResult');
+                
+                moodResult.textContent = `The final mood after all selections is: ${data.predicted_mood}`;
+                resultDiv.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

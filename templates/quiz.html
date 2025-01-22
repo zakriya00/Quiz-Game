@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Depression Detection</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles2.css') }}">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&amp;display=swap">
+    <script defer type="module" src="/static/main.js"></script>
+    <title>Document</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Depression Detection</h1>
-        <form id="mcq-form" method="POST">
+  <div id="app">
+      <canvas id="webgl-canvas"></canvas>
 
+        <div class="hero">
+          <h1>Depression Detection</h1>+
+        <form id="mcq-form" method="POST">
             <p>1. How often do you feel down, depressed, or hopeless?</p>
             <select name="q1">
                 <option value="0">Not at all</option>
@@ -86,8 +90,12 @@
             <button type="submit">Submit</button>
         </form>
         
-        <h1 id="result"></h1>
-    </div>
-    <script src="{{ url_for('static', filename='script2.js') }}"></script>
+        <p id="result"></p>
+        </div>
+      </div>
+
+    <script src="static/script.js"></script>
+            
+      
 </body>
 </html>

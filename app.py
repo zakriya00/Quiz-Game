@@ -20,6 +20,10 @@ def hex_to_rgb(hex_color):
 def index():
     return render_template('index.html')
 
+@app.route('/color')
+def color():
+    return render_template('color.html')
+
 @app.route('/predict-mood', methods=['POST'])
 def predict_mood():
     # Get the selected color(s) from the request
@@ -93,6 +97,8 @@ quiz_model = pickle.load(open('models/quiz.pkl', 'rb'))
 @app.route('/quiz')
 def quiz():
     return render_template('quiz.html')
+
+
 
 @app.route('/quiz_predict', methods=['POST'])
 def quiz_predict():
