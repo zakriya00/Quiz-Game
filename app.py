@@ -134,25 +134,26 @@ selected_emojis = []
 
 @app.route('/emoji_game')
 def emoji_game():
-    # Select 4 random emojis for the round
+    global selected_emojis
+    selected_emojis = []  # Reset when starting new game
     emojis_for_round = random.sample(possible_emojis, 4)
-    return render_template('emoji.html', emojis=emojis_for_round)
+    return render_template('emoji.html', emojis=emojis_for_round, round=1)
 
+# Update the select_emoji route to track rounds
 @app.route('/select_emoji', methods=['POST'])
 def select_emoji():
     global selected_emojis
 
-    # Get selected emoji from the form
     selected_emoji = request.form['emoji']
     selected_emojis.append(selected_emoji)
     
-    # If 5 rounds are completed, analyze the result
+    current_round = len(selected_emojis) + 1
+    
     if len(selected_emojis) == 5:
         return redirect(url_for('analyze'))
     else:
-        # If not yet 5 rounds, show the next round with different emojis
         emojis_for_round = random.sample(possible_emojis, 4)
-        return render_template('emoji.html', emojis=emojis_for_round)
+        return render_template('emoji.html', emojis=emojis_for_round, round=current_round)
 
 @app.route('/analyze')
 def analyze():
