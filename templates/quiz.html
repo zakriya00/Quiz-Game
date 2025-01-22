@@ -6,96 +6,162 @@
     <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&amp;display=swap">
     <script defer type="module" src="/static/main.js"></script>
-    <title>Document</title>
+    <title>Quiz Game</title>
+    <style>
+        /* Add minimal styles for the "Next Game" button */
+        #nextGameBtn {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none; /* Hidden by default */
+            margin-top: 20px;
+        }
+
+        #nextGameBtn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-  <div id="app">
-      <canvas id="webgl-canvas"></canvas>
+
+    {% extends "index.html" %}
+    {% block content %}
+    <div id="app">
+        <canvas id="webgl-canvas"></canvas> <!-- Ensure this is present for WebGL rendering -->
 
         <div class="hero">
-          <h1>Depression Detection</h1>+
-        <form id="mcq-form" method="POST">
-            <p>1. How often do you feel down, depressed, or hopeless?</p>
-            <select name="q1">
-                <option value="0">Not at all</option>
-                <option value="1">Several days</option>
-                <option value="2">More than half the days</option>
-                <option value="3">Nearly every day</option>
-            </select>
-        
-            <p>2. How often do you feel little interest or pleasure in doing things?</p>
-            <select name="q2">
-                <option value="0">Not at all</option>
-                <option value="1">Several days</option>
-                <option value="2">More than half the days</option>
-                <option value="3">Nearly every day</option>
-            </select>
-        
-            <p>3. How often do you have trouble sleeping or staying asleep?</p>
-            <select name="q3">
-                <option value="0">Not at all</option>
-                <option value="1">Several days</option>
-                <option value="2">More than half the days</option>
-                <option value="3">Nearly every day</option>
-            </select>
-        
-            <p>4. How often do you feel tired or have little energy?</p>
-            <select name="q4">
-                <option value="0">Not at all</option>
-                <option value="1">Several days</option>
-                <option value="2">More than half the days</option>
-                <option value="3">Nearly every day</option>
-            </select>
-        
-            <p>5. How often do you have poor appetite or overeating?</p>
-            <select name="q5">
-                <option value="0">Not at all</option>
-                <option value="1">Several days</option>
-                <option value="2">More than half the days</option>
-                <option value="3">Nearly every day</option>
-            </select>
-        
-            <p>6. How often do you feel bad about yourself or that you are a failure?</p>
-            <select name="q6">
-                <option value="0">Not at all</option>
-                <option value="1">Several days</option>
-                <option value="2">More than half the days</option>
-                <option value="3">Nearly every day</option>
-            </select>
-        
-            <p>7. How often do you have trouble concentrating on things?</p>
-            <select name="q7">
-                <option value="0">Not at all</option>
-                <option value="1">Several days</option>
-                <option value="2">More than half the days</option>
-                <option value="3">Nearly every day</option>
-            </select>
-        
-            <p>8. How often do you move or speak so slowly that others notice?</p>
-            <select name="q8">
-                <option value="0">Not at all</option>
-                <option value="1">Several days</option>
-                <option value="2">More than half the days</option>
-                <option value="3">Nearly every day</option>
-            </select>
-        
-            <p>9. How often do you have thoughts that you would be better off dead?</p>
-            <select name="q9">
-                <option value="0">Not at all</option>
-                <option value="1">Several days</option>
-                <option value="2">More than half the days</option>
-                <option value="3">Nearly every day</option>
-            </select>
-        
-            <button type="submit">Submit</button>
-        </form>
-        
-        <p id="result"></p>
-        </div>
-      </div>
-
-    <script src="static/script.js"></script>
+            <h1>Depression Detection</h1>
+            <form id="mcq-form" method="POST">
+                <p>1. How often do you feel down, depressed, or hopeless?</p>
+                <select name="q1">
+                    <option value="0">Not at all</option>
+                    <option value="1">Several days</option>
+                    <option value="2">More than half the days</option>
+                    <option value="3">Nearly every day</option>
+                </select>
             
-      
+                <p>2. How often do you feel little interest or pleasure in doing things?</p>
+                <select name="q2">
+                    <option value="0">Not at all</option>
+                    <option value="1">Several days</option>
+                    <option value="2">More than half the days</option>
+                    <option value="3">Nearly every day</option>
+                </select>
+            
+                <p>3. How often do you have trouble sleeping or staying asleep?</p>
+                <select name="q3">
+                    <option value="0">Not at all</option>
+                    <option value="1">Several days</option>
+                    <option value="2">More than half the days</option>
+                    <option value="3">Nearly every day</option>
+                </select>
+            
+                <p>4. How often do you feel tired or have little energy?</p>
+                <select name="q4">
+                    <option value="0">Not at all</option>
+                    <option value="1">Several days</option>
+                    <option value="2">More than half the days</option>
+                    <option value="3">Nearly every day</option>
+                </select>
+            
+                <p>5. How often do you have poor appetite or overeating?</p>
+                <select name="q5">
+                    <option value="0">Not at all</option>
+                    <option value="1">Several days</option>
+                    <option value="2">More than half the days</option>
+                    <option value="3">Nearly every day</option>
+                </select>
+            
+                <p>6. How often do you feel bad about yourself or that you are a failure?</p>
+                <select name="q6">
+                    <option value="0">Not at all</option>
+                    <option value="1">Several days</option>
+                    <option value="2">More than half the days</option>
+                    <option value="3">Nearly every day</option>
+                </select>
+            
+                <p>7. How often do you have trouble concentrating on things?</p>
+                <select name="q7">
+                    <option value="0">Not at all</option>
+                    <option value="1">Several days</option>
+                    <option value="2">More than half the days</option>
+                    <option value="3">Nearly every day</option>
+                </select>
+            
+                <p>8. How often do you move or speak so slowly that others notice?</p>
+                <select name="q8">
+                    <option value="0">Not at all</option>
+                    <option value="1">Several days</option>
+                    <option value="2">More than half the days</option>
+                    <option value="3">Nearly every day</option>
+                </select>
+            
+                <p>9. How often do you have thoughts that you would be better off dead?</p>
+                <select name="q9">
+                    <option value="0">Not at all</option>
+                    <option value="1">Several days</option>
+                    <option value="2">More than half the days</option>
+                    <option value="3">Nearly every day</option>
+                </select>
+            
+                <button type="submit">Submit</button>
+            </form>
+            
+            <p id="result"></p>
+            <button id="nextGameBtn" onclick="startNextGame()">Next Game</button> <!-- Added "Next Game" button -->
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('mcq-form');
+        const resultElement = document.getElementById('result');
+        const nextGameBtn = document.getElementById('nextGameBtn');
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // Collect answers from the form
+            const answers = [];
+            for (let i = 1; i <= 9; i++) {
+                const answer = parseInt(form[`q${i}`].value);
+                answers.push(answer);
+            }
+
+            // Send answers to the backend for prediction
+            fetch('/quiz_predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ answers }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Display the result
+                resultElement.textContent = `Depression Level: ${data.depression_level}`;
+
+                // Show the "Next Game" button
+                nextGameBtn.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultElement.textContent = 'An error occurred. Please try again.';
+            });
+        });
+
+        function startNextGame() {
+            // Redirect to the next game (Emoji Game)
+            window.location.href = "/emoji_game";
+        }
+    </script>
+    {% endblock %}
 </body>
 </html>

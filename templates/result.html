@@ -6,8 +6,11 @@
     <title>Depression Status</title>
 </head>
 <body>
+    {% extends "index.html" %}
+    {% block content %}
     <h1>Depression Status</h1>
     <p>{{ depression_status }}</p>
     <a href="{{ url_for('art_image_feedback') }}">Try again</a>
+    {% endblock %}
 </body>
 </html>

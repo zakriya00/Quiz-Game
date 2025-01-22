@@ -1,13 +1,16 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for
+from flask import Flask, request, jsonify, render_template, redirect, url_for, session, send_file
 import joblib
 import numpy as np
 import pickle
 import random
+from fpdf import FPDF
+import os
+from datetime import datetime
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'  # Required for session management
 
-
-### Color matching Game
+### Color Matching Game
 # Load the trained model
 model = joblib.load('models/color_mood_regressor.pkl')
 
@@ -18,6 +21,7 @@ def hex_to_rgb(hex_color):
 
 @app.route('/')
 def index():
+    session.clear()  # Clear session data at the start
     return render_template('index.html')
 
 @app.route('/color')
@@ -26,25 +30,20 @@ def color():
 
 @app.route('/predict-mood', methods=['POST'])
 def predict_mood():
-    # Get the selected color(s) from the request
     data = request.get_json()
     selected_colors = data.get('colors', [])
 
     if not selected_colors:
         return jsonify({"error": "No colors selected"}), 400
 
-    # Aggregate mood intensity for the selected colors
     total_intensity = 0
-
     for color in selected_colors:
         rgb = hex_to_rgb(color)
         intensity = model.predict([rgb])[0]
         total_intensity += intensity
 
-    # Calculate the average intensity
     avg_intensity = total_intensity / len(selected_colors)
 
-    # Determine mood based on the average intensity
     if avg_intensity > 0.7:
         predicted_mood = "Happy"
     elif avg_intensity > 0.4:
@@ -52,128 +51,227 @@ def predict_mood():
     else:
         predicted_mood = "Sad"
 
+    session['color_game_result'] = {
+        "predicted_mood": predicted_mood,
+        "mood_intensity": avg_intensity
+    }
+    session['color_game_completed'] = True  # Mark color game as completed
     return jsonify({"predicted_mood": predicted_mood, "mood_intensity": avg_intensity})
-
-
 
 ### Art Game
 @app.route('/art_image_feedback', methods=['GET', 'POST'])
 def art_image_feedback():
     if request.method == 'POST':
-        # Get the user's feedback on the images
         feedback = []
         for i in range(1, 6):
             feeling = request.form.get(f"image{i}")
             feedback.append(int(feeling))
 
-        # Predict depression based on feedback
         depression_status = predict_depression(feedback)
+        session['art_game_result'] = {
+            "feedback": feedback,
+            "depression_status": depression_status
+        }
+        session['art_game_completed'] = True  # Mark art game as completed
 
-        return render_template('result.html', depression_status=depression_status)
+        return redirect(url_for('quiz'))
 
     return render_template('art_therapy.html')
 
 def predict_depression(feedback):
-    # Calculate the average feedback score
     avg_feedback = np.mean(feedback)
-
-    # Generate depression suggestions based on the average feedback score
     if avg_feedback <= 1:
-        return "It seems you may be experiencing severe depressive symptoms. Please consider seeking professional help immediately."
+        return "Severe depressive symptoms"
     elif avg_feedback <= 2:
-        return "You may be experiencing symptoms of depression. It's important to reach out to a healthcare professional for guidance."
+        return "Moderate depressive symptoms"
     elif avg_feedback <= 3:
-        return "You may be feeling low. Consider talking to someone you trust or a mental health professional to help you through this."
+        return "Mild depressive symptoms"
     elif avg_feedback <= 4:
-        return "You seem to be in a neutral state. If you feel like you're struggling, it's okay to seek support from friends, family, or a counselor."
+        return "Neutral state"
     else:
-        return "You are in good mental health. Keep up the positive mindset, and remember, it's always good to check in on your mental well-being."
-
+        return "Good mental health"
 
 ### Quiz Game
-# Load the Quiz model
 quiz_model = pickle.load(open('models/quiz.pkl', 'rb'))
 
 @app.route('/quiz')
 def quiz():
     return render_template('quiz.html')
 
-
-
 @app.route('/quiz_predict', methods=['POST'])
 def quiz_predict():
     data = request.json['answers']
-    
-    # Ensure we have exactly 9 features
     if len(data) != 9:
         return jsonify({'error': 'Invalid input, expected 9 answers'}), 400
-    
-    prediction = quiz_model.predict([data])  # Predict depression level
-    return jsonify({'depression_level': prediction[0]})
 
+    prediction = quiz_model.predict([data])[0]
+    session['quiz_game_result'] = {"depression_level": prediction}
+    session['quiz_game_completed'] = True  # Mark quiz game as completed
+    return jsonify({'depression_level': prediction})
 
 ### Emoji Game
-# Load the pre-trained model and label encoder
 with open('models/emoji_mood_model.pkl', 'rb') as model_file:
     emoji_model = pickle.load(model_file)
 
 with open('models/label_encoder.pkl', 'rb') as le_file:
     label_encoder = pickle.load(le_file)
 
-# Define emoji to number mapping (same as in training)
 emoji_to_num = {
     '😊': 1, '😃': 2, '😄': 3, '😎': 4, '😇': 5,
     '😢': 6, '😞': 7, '😔': 8, '😱': 9, '😂': 10
 }
-
-# List of possible emojis for each round
 possible_emojis = ['😊', '😃', '😄', '😎', '😇', '😢', '😞', '😔', '😱', '😂']
-
-# Store selected emojis globally (for simplicity)
 selected_emojis = []
 
 @app.route('/emoji_game')
 def emoji_game():
-    # Select 4 random emojis for the round
     emojis_for_round = random.sample(possible_emojis, 4)
     return render_template('emoji.html', emojis=emojis_for_round)
 
 @app.route('/select_emoji', methods=['POST'])
 def select_emoji():
     global selected_emojis
-
-    # Get selected emoji from the form
     selected_emoji = request.form['emoji']
     selected_emojis.append(selected_emoji)
-    
-    # If 5 rounds are completed, analyze the result
+
     if len(selected_emojis) == 5:
         return redirect(url_for('analyze'))
     else:
-        # If not yet 5 rounds, show the next round with different emojis
         emojis_for_round = random.sample(possible_emojis, 4)
         return render_template('emoji.html', emojis=emojis_for_round)
 
 @app.route('/analyze')
 def analyze():
     global selected_emojis
-    
-    # Convert selected emojis to numerical values
     emoji_nums = [emoji_to_num[emoji] for emoji in selected_emojis]
-    
-    # Predict mood using the model
-    prediction = emoji_model.predict([emoji_nums])
-    mood = prediction[0]
-    
-    # Decode the prediction (mood)
-    mood_labels = label_encoder.inverse_transform([mood])
-    predicted_mood = mood_labels[0]
-    
-    # Reset selected emojis for the next game
-    selected_emojis = []
-    
-    return render_template('emoji_result.html', predicted_mood=predicted_mood)
+    prediction = emoji_model.predict([emoji_nums])[0]
+    mood = label_encoder.inverse_transform([prediction])[0]
 
+    session['emoji_game_result'] = {
+        "selected_emojis": selected_emojis,
+        "predicted_mood": mood
+    }
+    session['emoji_game_completed'] = True  # Mark emoji game as completed
+
+    selected_emojis = []
+    return redirect(url_for('generate_report'))
+
+
+class UnicodePDF(FPDF):
+    def header(self):
+        # Custom header if needed
+        pass
+
+    def footer(self):
+        # Custom footer if needed
+        pass
+
+    def add_unicode_text(self, text):
+        # Replace or remove unsupported characters
+        cleaned_text = self.clean_text(text)
+        self.multi_cell(0, 8, txt=cleaned_text)
+
+    def clean_text(self, text):
+        # Replace emojis with text descriptions
+        emoji_map = {
+            '😊': '[Smiling Face]',
+            '😃': '[Grinning Face]',
+            '😄': '[Grinning Face with Smiling Eyes]',
+            '😎': '[Smiling Face with Sunglasses]',
+            '😇': '[Smiling Face with Halo]',
+            '😢': '[Crying Face]',
+            '😞': '[Disappointed Face]',
+            '😔': '[Pensive Face]',
+            '😱': '[Face Screaming in Fear]',
+            '😂': '[Face with Tears of Joy]'
+        }
+        
+        # Replace emojis using the mapping
+        for emoji, desc in emoji_map.items():
+            text = text.replace(emoji, desc)
+        
+        return text
+
+### Generate Report (Updated)
+@app.route('/generate_report')
+def generate_report():
+    if not all(session.get(f'{game}_game_completed', False) for game in ['color', 'art', 'quiz', 'emoji']):
+        return redirect(url_for('index'))
+
+    # Get game results
+    color_result = session.get('color_game_result', {})
+    art_result = session.get('art_game_result', {})
+    quiz_result = session.get('quiz_game_result', {})
+    emoji_result = session.get('emoji_game_result', {})
+
+    # Create PDF with Unicode support
+    report = UnicodePDF()
+    report.add_page()
+    report.set_font("Arial", size=12)
+
+    # Header
+    report.set_font('Arial', 'B', 16)
+    report.cell(200, 10, txt="Comprehensive Mental Health Assessment Report", ln=True, align='C')
+    report.ln(10)
+
+    # Patient Demographics
+    report.set_font('Arial', 'B', 12)
+    report.cell(200, 10, txt="Patient Demographics", ln=True)
+    report.set_font('Arial', '', 12)
+    report.cell(200, 10, txt=f"Assessment Date: {datetime.now().strftime('%d/%m/%Y')}", ln=True)
+    report.cell(200, 10, txt="Clinical Setting: Digital Screening", ln=True)
+    report.ln(8)
+
+    # Presenting Concerns
+    report.set_font('Arial', 'B', 12)
+    report.cell(200, 10, txt="Presenting Concerns", ln=True)
+    report.set_font('Arial', '', 12)
+    concerns = f"The patient has completed a series of gamified mental health assessments. The results indicate the following:\n\n"
+    concerns += f"- Emotional State: {color_result.get('predicted_mood', 'N/A')}\n"
+    concerns += f"- Mood Intensity: {color_result.get('mood_intensity', 0):.2f}/1.0\n"
+    concerns += f"- Depression Status: {art_result.get('depression_status', 'N/A')}\n"
+    concerns += f"- Depression Level (Quiz): {quiz_result.get('depression_level', 'N/A')}\n"
+    concerns += f"- Predicted Mood (Emoji Game): {emoji_result.get('predicted_mood', 'N/A')}\n"
+    report.add_unicode_text(concerns)
+    report.ln(8)
+
+    # Detailed Analysis
+    report.set_font('Arial', 'B', 12)
+    report.cell(200, 10, txt="Detailed Analysis", ln=True)
+    report.set_font('Arial', '', 12)
+    analysis = f"1. **Color Game Results**:\n"
+    analysis += f"   - The patient's selected colors indicate a predominant mood of {color_result.get('predicted_mood', 'N/A')}.\n"
+    analysis += f"   - The mood intensity score of {color_result.get('mood_intensity', 0):.2f}/1.0 suggests a {color_result.get('predicted_mood', 'N/A')} emotional state.\n\n"
+    analysis += f"2. **Art Therapy Game Results**:\n"
+    analysis += f"   - The patient's feedback on the art images suggests {art_result.get('depression_status', 'N/A')}.\n"
+    analysis += f"   - This indicates a {art_result.get('depression_status', 'N/A').lower()} level of depressive symptoms.\n\n"
+    analysis += f"3. **Quiz Game Results**:\n"
+    analysis += f"   - The patient's responses to the quiz indicate a depression level of {quiz_result.get('depression_level', 'N/A')}.\n"
+    analysis += f"   - This suggests a {quiz_result.get('depression_level', 'N/A').lower()} level of depressive symptoms.\n\n"
+    analysis += f"4. **Emoji Game Results**:\n"
+    analysis += f"   - The patient's selected emojis suggest a mood of {emoji_result.get('predicted_mood', 'N/A')}.\n"
+    analysis += f"   - The selected emojis were: {', '.join(emoji_result.get('selected_emojis', []))}.\n\n"
+    report.add_unicode_text(analysis)
+    report.ln(8)
+
+    # Clinical Recommendations
+    report.set_font('Arial', 'B', 12)
+    report.cell(200, 10, txt="Clinical Recommendations", ln=True)
+    report.set_font('Arial', '', 12)
+    recommendations = f"Based on the assessment results, the following recommendations are made:\n\n"
+    recommendations += f"- **Follow-Up Consultation**: It is recommended that the patient schedule a follow-up consultation with a mental health professional for a more detailed evaluation.\n"
+    recommendations += f"- **Therapeutic Interventions**: Depending on the severity of the symptoms, therapeutic interventions such as Cognitive Behavioral Therapy (CBT) or counseling may be beneficial.\n"
+    recommendations += f"- **Lifestyle Modifications**: Encouraging the patient to engage in regular physical activity, maintain a balanced diet, and ensure adequate sleep can help improve overall mental well-being.\n"
+    recommendations += f"- **Support Systems**: The patient should be encouraged to seek support from family, friends, or support groups to help manage their mental health.\n"
+    report.add_unicode_text(recommendations)
+    report.ln(8)
+
+    # Save and return report
+    report_path = os.path.join('reports', 'clinical_report.pdf')
+    os.makedirs('reports', exist_ok=True)
+    report.output(report_path)
+
+    return send_file(report_path, as_attachment=True)
 
 
 if __name__ == '__main__':

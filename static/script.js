@@ -19,7 +19,7 @@ document.getElementById("mcq-form").addEventListener("submit", function(event) {
     }
 
     // Send the data to the server
-    fetch("/predict", {
+    fetch("/quiz_predict", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

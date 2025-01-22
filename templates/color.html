@@ -40,6 +40,12 @@
             margin: 10px;
             cursor: pointer;
             display: inline-block;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .color-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
         button {
@@ -50,6 +56,7 @@
             border: none;
             cursor: pointer;
             border-radius: 5px;
+            margin: 10px;
         }
 
         button:hover {
@@ -66,10 +73,21 @@
         #progressSection {
             margin-top: 20px;
         }
+
+        #nextGameBtn {
+            background-color: #007BFF;
+            display: none; /* Hidden by default */
+        }
+
+        #nextGameBtn:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
-    
+    {% extends "index.html" %}
+
+    {% block content %}
     <div class="container">
         <h1>Emotional Color Matching</h1>
         
@@ -81,15 +99,14 @@
         <!-- Provide color options for the user -->
         <p>Select the color that best represents how you feel about the above sentence:</p>
         <div id="colorOptions">
-            <button class="color-btn" style="background-color: #FFD700;" onclick="selectColor('#FFD700')"></button>
-            <button class="color-btn" style="background-color: #FF0000;" onclick="selectColor('#FF0000')"></button>
-            <button class="color-btn" style="background-color: #0000FF;" onclick="selectColor('#0000FF')"></button>
-            <button class="color-btn" style="background-color: #800080;" onclick="selectColor('#800080')"></button>
-            <button class="color-btn" style="background-color: #C0C0C0;" onclick="selectColor('#C0C0C0')"></button>
+            <!-- Color buttons will be dynamically generated here -->
         </div>
 
         <!-- Button to submit the selection -->
         <button id="submitBtn" onclick="submitSelection()">Submit Selection</button>
+
+        <!-- Reset button -->
+        <button id="resetBtn" onclick="resetGame()">Reset Game</button>
 
         <!-- Progress section -->
         <div id="progressSection" style="display:none;">
@@ -102,9 +119,10 @@
             <h3>Predicted Mood:</h3>
             <p id="moodResult"></p>
         </div>
-    </div>
 
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+        <!-- Next Game button -->
+        <button id="nextGameBtn" onclick="startNextGame()">Next Game</button>
+    </div>
 
     <script>
         let selectedColor = null;
@@ -118,6 +136,23 @@
             "I am feeling a bit down and sad today.",
             "This moment feels chaotic, and I'm overwhelmed."
         ];
+
+        const colors = ["#FFD700", "#FF0000", "#0000FF", "#800080", "#C0C0C0"];
+
+        // Function to dynamically generate color buttons
+        function generateColorButtons() {
+            const colorOptions = document.getElementById("colorOptions");
+            colorOptions.innerHTML = "";  // Clear existing buttons
+
+            colors.forEach(color => {
+                const button = document.createElement("button");
+                button.className = "color-btn";
+                button.style.backgroundColor = color;
+                button.setAttribute("aria-label", `Color ${color}`);
+                button.onclick = () => selectColor(color);
+                colorOptions.appendChild(button);
+            });
+        }
 
         function selectColor(color) {
             // Highlight the selected color and store it
@@ -161,6 +196,8 @@
                 document.getElementById("submitBtn").disabled = false;
                 document.getElementById("nextBtn").style.display = "none";  // Hide next button until color is selected
                 document.getElementById("result").style.display = "none";  // Hide result
+                selectedColor = null;  // Reset selected color
+                generateColorButtons();  // Regenerate color buttons
             } else {
                 // All sentences completed, send data to backend
                 submitAllSelections();
@@ -178,7 +215,12 @@
                 },
                 body: JSON.stringify(colorData),
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 // Display the final predicted mood
                 const resultDiv = document.getElementById('result');
@@ -186,11 +228,38 @@
                 
                 moodResult.textContent = `The final mood after all selections is: ${data.predicted_mood}`;
                 resultDiv.style.display = 'block';
+
+                // Show the "Next Game" button
+                document.getElementById("nextGameBtn").style.display = "inline-block";
             })
             .catch(error => {
                 console.error('Error:', error);
+                alert("An error occurred while processing your request. Please try again.");
             });
         }
+
+        function resetGame() {
+            // Reset all game variables and UI
+            sentenceIndex = 0;
+            colorChoices = [];
+            selectedColor = null;
+            document.getElementById("sentence").innerText = sentences[0];
+            document.getElementById("sentenceNumber").innerText = "Sentence 1/5";
+            document.getElementById("submitBtn").disabled = false;
+            document.getElementById("progressSection").style.display = "none";
+            document.getElementById("result").style.display = "none";
+            document.getElementById("nextGameBtn").style.display = "none";  // Hide "Next Game" button
+            generateColorButtons();  // Regenerate color buttons
+        }
+
+        function startNextGame() {
+            // Redirect to the next game (Art Game)
+            window.location.href = "/art_image_feedback";
+        }
+
+        // Initialize the game
+        generateColorButtons();
     </script>
+    {% endblock %}
 </body>
 </html>

@@ -6,6 +6,8 @@
     <title>Artistic Image Feedback</title>
 </head>
 <body>
+    {% extends "index.html" %}
+    {% block content %}
     <h1>How do you feel about the following images?</h1>
     <form method="POST">
         <div>
@@ -40,5 +42,6 @@
 
         <button type="submit">Submit</button>
     </form>
+    {% endblock %}
 </body>
 </html>
