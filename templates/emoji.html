@@ -1,16 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Emoji Mood Game</title>
-</head>
-<body>
-    <h1>Round {{ round }}: Select one emoji</h1>
-    <form action="{{ url_for('select_emoji') }}" method="POST">
+    <style>
+      body {
+        font-family: "Arial Rounded MT Bold", Arial, sans-serif;
+        background-color: #f0f7ff;
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .container {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        width: 90%;
+        margin: 20px auto;
+        text-align: center;
+      }
+
+      h1 {
+        color: #2c3e50;
+        margin-bottom: 2rem;
+        font-size: 1.8rem;
+      }
+
+      .emoji-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+        margin: 2rem 0;
+      }
+
+      .emoji-btn {
+        font-size: 3rem;
+        padding: 1rem;
+        border: none;
+        border-radius: 10px;
+        background: #e8f4ff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 120px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .emoji-btn:hover {
+        background: #d1e8ff;
+        transform: scale(1.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .round-counter {
+        color: #3498db;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+      }
+
+      @media (max-width: 480px) {
+        .emoji-btn {
+          font-size: 2.5rem;
+          width: 100px;
+          height: 100px;
+        }
+
+        h1 {
+          font-size: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="round-counter">Round {{ round }}/5</div>
+      <h1>Select one emoji that matches your current mood</h1>
+      <form
+        class="emoji-form"
+        action="{{ url_for('select_emoji') }}"
+        method="POST"
+      >
         {% for emoji in emojis %}
-        <button type="submit" name="emoji" value="{{ emoji }}">{{ emoji }}</button>
+        <button
+          class="emoji-btn"
+          type="submit"
+          name="emoji"
+          value="{{ emoji }}"
+        >
+          {{ emoji }}
+        </button>
         {% endfor %}
-    </form>
-</body>
+      </form>
+    </div>
+  </body>
 </html>

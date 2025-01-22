@@ -1,101 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&amp;display=swap">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&amp;display=swap"
+    />
     <script defer type="module" src="/static/main.js"></script>
     <title>Document</title>
-</head>
-<body>
-  <div id="app">
+  </head>
+  <body>
+    <div id="app">
       <canvas id="webgl-canvas"></canvas>
 
-        <div class="hero">
-          <h1>Depression Detection</h1>+
+      <div class="hero">
+        <h1>Depression Detection</h1>
         <form id="mcq-form" method="POST">
-            <p>1. How often do you feel down, depressed, or hopeless?</p>
-            <select name="q1">
-                <option value="0">Not at all</option>
-                <option value="1">Several days</option>
-                <option value="2">More than half the days</option>
-                <option value="3">Nearly every day</option>
-            </select>
-        
-            <p>2. How often do you feel little interest or pleasure in doing things?</p>
-            <select name="q2">
-                <option value="0">Not at all</option>
-                <option value="1">Several days</option>
-                <option value="2">More than half the days</option>
-                <option value="3">Nearly every day</option>
-            </select>
-        
-            <p>3. How often do you have trouble sleeping or staying asleep?</p>
-            <select name="q3">
-                <option value="0">Not at all</option>
-                <option value="1">Several days</option>
-                <option value="2">More than half the days</option>
-                <option value="3">Nearly every day</option>
-            </select>
-        
-            <p>4. How often do you feel tired or have little energy?</p>
-            <select name="q4">
-                <option value="0">Not at all</option>
-                <option value="1">Several days</option>
-                <option value="2">More than half the days</option>
-                <option value="3">Nearly every day</option>
-            </select>
-        
-            <p>5. How often do you have poor appetite or overeating?</p>
-            <select name="q5">
-                <option value="0">Not at all</option>
-                <option value="1">Several days</option>
-                <option value="2">More than half the days</option>
-                <option value="3">Nearly every day</option>
-            </select>
-        
-            <p>6. How often do you feel bad about yourself or that you are a failure?</p>
-            <select name="q6">
-                <option value="0">Not at all</option>
-                <option value="1">Several days</option>
-                <option value="2">More than half the days</option>
-                <option value="3">Nearly every day</option>
-            </select>
-        
-            <p>7. How often do you have trouble concentrating on things?</p>
-            <select name="q7">
-                <option value="0">Not at all</option>
-                <option value="1">Several days</option>
-                <option value="2">More than half the days</option>
-                <option value="3">Nearly every day</option>
-            </select>
-        
-            <p>8. How often do you move or speak so slowly that others notice?</p>
-            <select name="q8">
-                <option value="0">Not at all</option>
-                <option value="1">Several days</option>
-                <option value="2">More than half the days</option>
-                <option value="3">Nearly every day</option>
-            </select>
-        
-            <p>9. How often do you have thoughts that you would be better off dead?</p>
-            <select name="q9">
-                <option value="0">Not at all</option>
-                <option value="1">Several days</option>
-                <option value="2">More than half the days</option>
-                <option value="3">Nearly every day</option>
-            </select>
-        
-            <button type="submit">Submit</button>
+          <p>1. How often do you feel down, depressed, or hopeless?</p>
+          <select name="q1">
+            <option value="0">Not at all</option>
+            <option value="1">Several days</option>
+            <option value="2">More than half the days</option>
+            <option value="3">Nearly every day</option>
+          </select>
+
+          <p>
+            2. How often do you feel little interest or pleasure in doing
+            things?
+          </p>
+          <select name="q2">
+            <option value="0">Not at all</option>
+            <option value="1">Several days</option>
+            <option value="2">More than half the days</option>
+            <option value="3">Nearly every day</option>
+          </select>
+
+          <p>3. How often do you have trouble sleeping or staying asleep?</p>
+          <select name="q3">
+            <option value="0">Not at all</option>
+            <option value="1">Several days</option>
+            <option value="2">More than half the days</option>
+            <option value="3">Nearly every day</option>
+          </select>
+
+          <p>4. How often do you feel tired or have little energy?</p>
+          <select name="q4">
+            <option value="0">Not at all</option>
+            <option value="1">Several days</option>
+            <option value="2">More than half the days</option>
+            <option value="3">Nearly every day</option>
+          </select>
+
+          <p>5. How often do you have poor appetite or overeating?</p>
+          <select name="q5">
+            <option value="0">Not at all</option>
+            <option value="1">Several days</option>
+            <option value="2">More than half the days</option>
+            <option value="3">Nearly every day</option>
+          </select>
+
+          <p>
+            6. How often do you feel bad about yourself or that you are a
+            failure?
+          </p>
+          <select name="q6">
+            <option value="0">Not at all</option>
+            <option value="1">Several days</option>
+            <option value="2">More than half the days</option>
+            <option value="3">Nearly every day</option>
+          </select>
+
+          <p>7. How often do you have trouble concentrating on things?</p>
+          <select name="q7">
+            <option value="0">Not at all</option>
+            <option value="1">Several days</option>
+            <option value="2">More than half the days</option>
+            <option value="3">Nearly every day</option>
+          </select>
+
+          <p>8. How often do you move or speak so slowly that others notice?</p>
+          <select name="q8">
+            <option value="0">Not at all</option>
+            <option value="1">Several days</option>
+            <option value="2">More than half the days</option>
+            <option value="3">Nearly every day</option>
+          </select>
+
+          <p>
+            9. How often do you have thoughts that you would be better off dead?
+          </p>
+          <select name="q9">
+            <option value="0">Not at all</option>
+            <option value="1">Several days</option>
+            <option value="2">More than half the days</option>
+            <option value="3">Nearly every day</option>
+          </select>
+
+          <button type="submit">Submit</button>
         </form>
-        
+
         <p id="result"></p>
-        </div>
       </div>
+    </div>
 
     <script src="static/script.js"></script>
-            
-      
-</body>
+  </body>
 </html>
