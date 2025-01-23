@@ -62,7 +62,7 @@ def predict_mood():
 @app.route('/art_image_feedback', methods=['GET', 'POST'])
 def art_image_feedback():
     if request.method == 'POST':
-        feedback = [int(request.form.get(f"image{i}")) for i in range(1, 6)]
+        feedback = [int(request.form.get(f"image{i}")) for i in range(1, 7)]
         depression_status = predict_depression(feedback)
         
         session['art_game_result'] = {

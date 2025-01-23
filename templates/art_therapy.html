@@ -4,75 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artistic Image Feedback</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .result-section {
-            background: #f8f9fa;
-            padding: 2rem;
-            border-radius: 10px;
-            margin-top: 2rem;
-            border: 1px solid #e0e0e0;
-            display: {% if show_result %}block{% else %}none{% endif %};
-        }
-        .next-game-btn {
-            background: #4154f1;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 25px;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 1rem;
+        body {
+            background-color: #f4f7fa;
         }
     </style>
 </head>
-<body>
-    {% extends "index.html" %}
+<body class="bg-gray-50 font-sans">
+    {% extends"index.html" %}
     {% block content %}
-    <h1>How do you feel about the following images?</h1>
     
-    <form method="POST">
-        <!-- Keep existing image rating elements -->
-        <div>
-            <img src="{{ url_for('static', filename='images/image1.jpg') }}" alt="Nature Image 1" width="300">
-            <label for="image1">Rate your feelings (1 = Very Bad, 5 = Very Good):</label>
-            <input type="number" id="image1" name="image1" min="1" max="5" required>
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">How do you feel about the following images?</h1>
+        
+        <form method="POST" class="space-y-8">
+            <div class="grid md:grid-cols-2 gap-6">
+                {% for i in range(1, 7) %}
+                <div class="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow">
+                    <img src="{{ url_for('static', filename='images/image{}.jpg'.format(i)) }}" 
+                         alt="Nature Image {{ i }}" 
+                         class="w-full h-64 object-cover rounded-md mb-4">
+                    <label for="image{{ i }}" class="block text-gray-700 mb-2">
+                        Rate your feelings (1 = Very Bad, 5 = Very Good):
+                    </label>
+                    <input type="number" 
+                           id="image{{ i }}" 
+                           name="image{{ i }}" 
+                           min="1" 
+                           max="5" 
+                           required 
+                           class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-full hover:bg-blue-700 transition-colors">
+                    Submit
+                </button>
+            </div>
+        </form>
+
+        {% if show_result %}
+        <div class="mt-8 bg-white shadow-lg rounded-lg p-8 text-center">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Your Art Therapy Result</h2>
+            <p class="text-lg mb-6">
+                Depression Status: 
+                <strong class="{% if depression_status == 'Low Risk' %}text-green-600{% else %}text-red-600{% endif %}">
+                    {{ depression_status }}
+                </strong>
+            </p>
+            <a href="/quiz" class="inline-block bg-indigo-600 text-white px-6 py-3 rounded-full hover:bg-indigo-700 transition-colors">
+                Next Game
+            </a>
         </div>
-        <div>
-            <img src="{{ url_for('static', filename='images/image2.jpg') }}" alt="Nature Image 2" width="300">
-            <label for="image2">Rate your feelings (1 = Very Bad, 5 = Very Good):</label>
-            <input type="number" id="image2" name="image2" min="1" max="5" required>
-        </div>
-
-        <div>
-            <img src="{{ url_for('static', filename='images/image3.jpg') }}" alt="Nature Image 3" width="300">
-            <label for="image3">Rate your feelings (1 = Very Bad, 5 = Very Good):</label>
-            <input type="number" id="image3" name="image3" min="1" max="5" required>
-        </div>
-
-        <div>
-            <img src="{{ url_for('static', filename='images/image4.jpg') }}" alt="Nature Image 4" width="300">
-            <label for="image4">Rate your feelings (1 = Very Bad, 5 = Very Good):</label>
-            <input type="number" id="image4" name="image4" min="1" max="5" required>
-        </div>
-
-        <div>
-            <img src="{{ url_for('static', filename='images/image5.jpg') }}" alt="Nature Image 5" width="300">
-            <label for="image5">Rate your feelings (1 = Very Bad, 5 = Very Good):</label>
-            <input type="number" id="image5" name="image5" min="1" max="5" required>
-        </div>
-
-        <!-- Repeat for other images -->
-
-        <button type="submit">Submit</button>
-    </form>
-
-    {% if show_result %}
-    <div class="result-section">
-        <h2>Your Art Therapy Result</h2>
-        <p>Depression Status: <strong>{{ depression_status }}</strong></p>
-        <a href="/quiz" class="next-game-btn">Next Game</a>
+        {% endif %}
     </div>
-    {% endif %}
-
     {% endblock %}
 </body>
 </html>
