@@ -1,16 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Result</title>
-</head>
-<body>
+    <style>
+      body {
+        font-family: "Arial Rounded MT Bold", Arial, sans-serif;
+        background-color: #f0f7ff;
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .result-container {
+        background: white;
+        padding: 3rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 90%;
+        text-align: center;
+      }
+
+      h1 {
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+      }
+
+      .mood-result {
+        font-size: 2rem;
+        color: #27ae60;
+        margin: 2rem 0;
+        padding: 1rem;
+        background: #e8f6ef;
+        border-radius: 8px;
+        display: inline-block;
+      }
+
+      .play-again {
+        display: inline-block;
+        padding: 12px 30px;
+        background: #3498db;
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+      }
+
+      .play-again:hover {
+        background: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+      }
+
+      .celebrate-emoji {
+        font-size: 3rem;
+        margin: 1rem 0;
+      }
+
+      @media (max-width: 480px) {
+        .result-container {
+          padding: 2rem;
+        }
+
+        .mood-result {
+          font-size: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
     {% extends "index.html" %}
     {% block content %}
-    <h1>Your Mood Prediction</h1>
-    <p>Based on your selections, your mood is: <strong>{{ predicted_mood }}</strong></p>
-    <a href="{{ url_for('emoji_game') }}">Play Again</a>
+    <div class="result-container">
+      <div class="celebrate-emoji">🎉</div>
+      <h1>Your Mood Prediction</h1>
+      <p>Based on your selections, your mood is:</p>
+      <div class="mood-result">{{ predicted_mood }}</div>
+      <br />
+      <a href="{{ url_for('emoji_game') }}" class="play-again">Play Again</a>
+    </div>
     {% endblock %}
-</body>
+  </body>
+</head>
 </html>

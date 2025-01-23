@@ -4,18 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Artistic Image Feedback</title>
+    <style>
+        .result-section {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            border: 1px solid #e0e0e0;
+            display: {% if show_result %}block{% else %}none{% endif %};
+        }
+        .next-game-btn {
+            background: #4154f1;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+    </style>
 </head>
 <body>
     {% extends "index.html" %}
     {% block content %}
     <h1>How do you feel about the following images?</h1>
+    
     <form method="POST">
+        <!-- Keep existing image rating elements -->
         <div>
             <img src="{{ url_for('static', filename='images/image1.jpg') }}" alt="Nature Image 1" width="300">
             <label for="image1">Rate your feelings (1 = Very Bad, 5 = Very Good):</label>
             <input type="number" id="image1" name="image1" min="1" max="5" required>
         </div>
-
         <div>
             <img src="{{ url_for('static', filename='images/image2.jpg') }}" alt="Nature Image 2" width="300">
             <label for="image2">Rate your feelings (1 = Very Bad, 5 = Very Good):</label>
@@ -40,8 +60,19 @@
             <input type="number" id="image5" name="image5" min="1" max="5" required>
         </div>
 
+        <!-- Repeat for other images -->
+
         <button type="submit">Submit</button>
     </form>
+
+    {% if show_result %}
+    <div class="result-section">
+        <h2>Your Art Therapy Result</h2>
+        <p>Depression Status: <strong>{{ depression_status }}</strong></p>
+        <a href="/quiz" class="next-game-btn">Next Game</a>
+    </div>
+    {% endif %}
+
     {% endblock %}
 </body>
 </html>

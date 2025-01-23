@@ -62,21 +62,21 @@ def predict_mood():
 @app.route('/art_image_feedback', methods=['GET', 'POST'])
 def art_image_feedback():
     if request.method == 'POST':
-        feedback = []
-        for i in range(1, 6):
-            feeling = request.form.get(f"image{i}")
-            feedback.append(int(feeling))
-
+        feedback = [int(request.form.get(f"image{i}")) for i in range(1, 6)]
         depression_status = predict_depression(feedback)
+        
         session['art_game_result'] = {
             "feedback": feedback,
             "depression_status": depression_status
         }
-        session['art_game_completed'] = True  # Mark art game as completed
+        session['art_game_completed'] = True
+        
+        # Return result to same template
+        return render_template('art_therapy.html', 
+                            depression_status=depression_status,
+                            show_result=True)
 
-        return redirect(url_for('quiz'))
-
-    return render_template('art_therapy.html')
+    return render_template('art_therapy.html', show_result=False)
 
 def predict_depression(feedback):
     avg_feedback = np.mean(feedback)
@@ -100,14 +100,28 @@ def quiz():
 
 @app.route('/quiz_predict', methods=['POST'])
 def quiz_predict():
-    data = request.json['answers']
-    if len(data) != 9:
-        return jsonify({'error': 'Invalid input, expected 9 answers'}), 400
+    data = request.get_json()
+    if not data or 'answers' not in data:
+        return jsonify({'error': 'Invalid input'}), 400
+        
+    answers = data['answers']
+    if len(answers) != 9:
+        return jsonify({'error': 'Expected 9 answers'}), 400
 
-    prediction = quiz_model.predict([data])[0]
+    try:
+        prediction = quiz_model.predict([answers])[0]
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
     session['quiz_game_result'] = {"depression_level": prediction}
-    session['quiz_game_completed'] = True  # Mark quiz game as completed
-    return jsonify({'depression_level': prediction})
+    session['quiz_game_completed'] = True
+    return jsonify({
+        'depression_level': prediction,
+        'redirect': url_for('emoji_game')
+    })
+
+
+
 
 ### Emoji Game
 with open('models/emoji_mood_model.pkl', 'rb') as model_file:
@@ -125,21 +139,29 @@ selected_emojis = []
 
 @app.route('/emoji_game')
 def emoji_game():
+    global selected_emojis
+    selected_emojis = []  # Reset when starting new game
     emojis_for_round = random.sample(possible_emojis, 4)
-    return render_template('emoji.html', emojis=emojis_for_round)
+    return render_template('emoji.html', emojis=emojis_for_round, round=1)
 
+# Update the select_emoji route to track rounds
 @app.route('/select_emoji', methods=['POST'])
 def select_emoji():
     global selected_emojis
+
     selected_emoji = request.form['emoji']
     selected_emojis.append(selected_emoji)
+    
+    current_round = len(selected_emojis) + 1
+    
 
     if len(selected_emojis) == 5:
         return redirect(url_for('analyze'))
     else:
         emojis_for_round = random.sample(possible_emojis, 4)
-        return render_template('emoji.html', emojis=emojis_for_round)
+        return render_template('emoji.html', emojis=emojis_for_round, round=current_round)
 
+### Update the analyze route in app.py
 @app.route('/analyze')
 def analyze():
     global selected_emojis
@@ -151,10 +173,15 @@ def analyze():
         "selected_emojis": selected_emojis,
         "predicted_mood": mood
     }
-    session['emoji_game_completed'] = True  # Mark emoji game as completed
+    session['emoji_game_completed'] = True
 
     selected_emojis = []
-    return redirect(url_for('generate_report'))
+    
+    # Check if all games completed
+    if all(session.get(f'{game}_game_completed') for game in ['color', 'art', 'quiz', 'emoji']):
+        return redirect(url_for('generate_report'))
+    else:
+        return redirect(url_for('index'))
 
 
 class UnicodePDF(FPDF):
